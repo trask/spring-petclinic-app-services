@@ -133,3 +133,66 @@ The Spring PetClinic sample application is released under version 2.0 of the [Ap
 [spring-petclinic-graphql]: https://github.com/spring-petclinic/spring-petclinic-graphql
 [spring-petclinic-kotlin]: https://github.com/spring-petclinic/spring-petclinic-kotlin
 [spring-petclinic-rest]: https://github.com/spring-petclinic/spring-petclinic-rest
+
+<br>
+
+-----------------
+
+# Now deploy it to Azure App Services
+
+## Add azure-webapp-maven-plugin to the pom.xml:
+
+```
+      <plugin>
+        <groupId>com.microsoft.azure</groupId>
+        <artifactId>azure-webapp-maven-plugin</artifactId>
+        <version>2.2.0</version>
+        <configuration>
+          <!-- replace with your own deployment details -->
+          <subscriptionId>111111-11111-11111-1111111</subscriptionId>
+          <resourceGroup>spring-petclinic-xxxxxxxxxx-rg</resourceGroup>
+          <appName>spring-petclinic-xxxxxxxxxx</appName>
+          <pricingTier>P1v2</pricingTier>
+          <region>westus</region>
+          <!-- end of deployment details section -->
+          <runtime>
+            <os>Linux</os>
+            <webContainer>Java SE</webContainer>
+            <javaVersion>Java 11</javaVersion>
+          </runtime>
+          <deployment>
+            <resources>
+              <resource>
+                <type>jar</type>
+                <directory>${project.basedir}/target</directory>
+                <includes>
+                  <include>*.jar</include>
+                </includes>
+              </resource>
+            </resources>
+          </deployment>
+        </configuration>
+      </plugin>
+```
+
+## Build and deploy
+
+You will need to run `az login` first if not already authenticated.
+
+```
+mvn package azure-webapp:deploy
+```
+
+## Turn on Application Insights
+
+![Turn on Application Insights](turn-on-application-insights.png)
+
+## Generate load
+
+```
+while true
+do
+  curl -s -o /dev/null -w "%{http_code} " \
+       https://spring-petclinic-xxxxxxxxxx.azurewebsites.net/owners?lastName=
+done
+```

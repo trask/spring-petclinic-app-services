@@ -124,6 +124,36 @@
   <build>
     <plugins>
       <plugin>
+        <groupId>com.microsoft.azure</groupId>
+        <artifactId>azure-webapp-maven-plugin</artifactId>
+        <version>2.2.0</version>
+        <configuration>
+          <!-- replace with your own deployment details -->
+          <subscriptionId>111111-11111-11111-1111111</subscriptionId>
+          <resourceGroup>spring-petclinic-xxxxxxxxxx-rg</resourceGroup>
+          <appName>spring-petclinic-xxxxxxxxxx</appName>
+          <pricingTier>P1v2</pricingTier>
+          <region>westus</region>
+          <!-- end of deployment details section -->
+          <runtime>
+            <os>Linux</os>
+            <webContainer>Java SE</webContainer>
+            <javaVersion>Java 11</javaVersion>
+          </runtime>
+          <deployment>
+            <resources>
+              <resource>
+                <type>jar</type>
+                <directory>${project.basedir}/target</directory>
+                <includes>
+                  <include>*.jar</include>
+                </includes>
+              </resource>
+            </resources>
+          </deployment>
+        </configuration>
+      </plugin>
+      <plugin>
         <groupId>io.spring.javaformat</groupId>
         <artifactId>spring-javaformat-maven-plugin</artifactId>
         <version>${spring-format.version}</version>
